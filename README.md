@@ -7,3 +7,6 @@ GigaVoxels and GigaSpace are indeed the same tool.
 
 # Website
 http://gigavoxels.inrialpes.fr/
+
+# Version
+Version v2.0.0 is an updated version from the original v1.0.0 from july 2015. The goal is to port code to latest CUDA version and replace previous 3rd party dependencies with licence free ones such as: glm, glad, glfw, ImGui, stb and assimp. Besides, goal is to simplify all CMake files.
