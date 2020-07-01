@@ -39,6 +39,16 @@ add_definitions( -DGLFW_DLL )
 # OpenGL
 find_package( OpenGL REQUIRED )
 
+# CUDA
+find_package( CUDA REQUIRED )
+# - add current GPU architecture at runtime
+set(CUDA_ARCH_LIST Auto CACHE STRING
+    "List of CUDA architectures (e.g. Pascal, Volta, etc) or \
+compute capability versions (6.1, 7.0, etc) to generate code for. \
+Set to Auto for automatic detection (default)."
+)
+cuda_select_nvcc_arch_flags( CUDA_ARCH_FLAGS ${CUDA_ARCH_LIST} )
+
 ##################################################################################
 # Include directories
 ##################################################################################
@@ -61,6 +71,11 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/../../3rdParty/stb" )
 # glfw
 set( glfw3_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../3rdParty/glfw/lib/cmake/glfw3 )
 find_package( glfw3 CONFIG REQUIRED )
+
+# cudpp
+set( cudpp_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../3rdParty/cudpp/lib )
+find_package( cudpp CONFIG REQUIRED )
+include_directories( ${cudpp_INCLUDE_DIRS} )
 
 ##################################################################################
 # Program
@@ -91,7 +106,10 @@ set( resList ${resList} ${incList} )
 set( resList ${resList} ${inlList} )
 set( resList ${resList} ${shaderList} )
 # target
-add_library( ${PROJECT_NAME} SHARED ${srcList} ${resList} )
+#add_library( ${PROJECT_NAME} SHARED ${srcList} ${resList} )
+# add current GPU architecture at runtime
+set( GENCODE ${CUDA_ARCH_FLAGS} )
+cuda_add_library( ${PROJECT_NAME} SHARED ${srcList} ${resList} OPTIONS ${GENCODE} )
 
 #####################################################
 set( CUSTOM_DEBUG_POSTFIX "d" )
@@ -113,6 +131,9 @@ target_link_libraries( ${PROJECT_NAME} glad::glad )
 
 # dlopen/dlclose
 target_link_libraries( ${PROJECT_NAME} ${CMAKE_DL_LIBS} )
+
+# cudpp
+target_link_libraries( ${PROJECT_NAME} cudpp )
 
 # Project property
 set_property( TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11 )
