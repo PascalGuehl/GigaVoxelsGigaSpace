@@ -21,5 +21,5 @@ message( STATUS "" )
 #----------------------------------------------------------------
 
 add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/GsGraphics" )
-#add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/GsCompute" )
+add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/GsCompute" )
 #add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/GigaSpace" )
