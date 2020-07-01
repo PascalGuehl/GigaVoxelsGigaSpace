@@ -64,8 +64,15 @@ install( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/glfw/bin
     DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/Install/GigaSpaceProject
     FILES_MATCHING
     PATTERN "*.dll"
-)# - assimp
+)
+# - assimp
 install( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/assimp/bin
+    DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/Install/GigaSpaceProject
+    FILES_MATCHING
+    PATTERN "*.dll"
+)
+# - cudpp
+install( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/cudpp/lib
     DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/Install/GigaSpaceProject
     FILES_MATCHING
     PATTERN "*.dll"
