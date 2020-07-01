@@ -223,6 +223,6 @@ private:
  ***************************** INLINE SECTION *****************************
  **************************************************************************/
 
-#include "GsDataParallelPrimitives.inl"
+#include "GsCompute/GsDataParallelPrimitives.inl"
 
 #endif // _GS_DATA_PARALLEL_PRIMITIVES_H_

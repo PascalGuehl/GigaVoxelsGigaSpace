@@ -83,7 +83,7 @@ include_directories( ${cudpp_INCLUDE_DIRS} )
 
 # Retrieve source files
 file( GLOB incList "${CMAKE_CURRENT_SOURCE_DIR}/*.h" )
-file( GLOB inlList "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp" )
+file( GLOB inlList "${CMAKE_CURRENT_SOURCE_DIR}/*.inl" )
 file( GLOB srcList "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" )
 # - shaders
 file( GLOB shaderList "${CMAKE_CURRENT_SOURCE_DIR}/../Shaders/*.vert" )

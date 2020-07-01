@@ -435,6 +435,6 @@ private:
  ***************************** INLINE SECTION *****************************
  **************************************************************************/
 
-#include "GsShaderProgram.inl"
+#include "GsGraphics/GsShaderProgram.inl"
 
 #endif

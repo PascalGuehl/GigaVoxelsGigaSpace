@@ -427,6 +427,6 @@ private:
  ***************************** INLINE SECTION *****************************
  **************************************************************************/
 
-#include "GsIGraphicsObject.inl"
+#include "GsGraphics/GsIGraphicsObject.inl"
 
 #endif // _GS_I_GRAPHICS_OBJECT_H_
