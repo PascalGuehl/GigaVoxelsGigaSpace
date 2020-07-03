@@ -54,7 +54,7 @@
 //#include <helper_math.h>
 //
 //// GL
-//#include <GL/glew.h>
+//#include <glad/glad.h>
 //
 //// Loki
 //#include <loki/Typelist.h>

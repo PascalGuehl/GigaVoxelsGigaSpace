@@ -155,13 +155,13 @@ void GsCommonGraphicsPass::initializeBuffers()
 		// Texture will be filled with data coming from previous color PBO.
 		// A full-screen quad will be used.
 		glGenTextures( 1, &_colorTexture );
-		glBindTexture( GL_TEXTURE_RECTANGLE_EXT, _colorTexture );
-		glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-		glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-		glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-		glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-		glTexImage2D( GL_TEXTURE_RECTANGLE_EXT, 0, GL_RGBA8, bufferWidth, bufferHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
-		glBindTexture( GL_TEXTURE_RECTANGLE_EXT, 0 );
+		glBindTexture( GL_TEXTURE_RECTANGLE, _colorTexture );
+		glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+		glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+		glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+		glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+		glTexImage2D( GL_TEXTURE_RECTANGLE, 0, GL_RGBA8, bufferWidth, bufferHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
+		glBindTexture( GL_TEXTURE_RECTANGLE, 0 );
 		GV_CHECK_GL_ERROR();
 	}
 	else
@@ -192,13 +192,13 @@ void GsCommonGraphicsPass::initializeBuffers()
 	// Texture will be filled with data coming from previous depth PBO.
 	// A full-screen quad will be used.
 	glGenTextures( 1, &_depthTexture );
-	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, _depthTexture );
-	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-	glTexImage2D( GL_TEXTURE_RECTANGLE_EXT, 0, GL_DEPTH24_STENCIL8_EXT, bufferWidth, bufferHeight, 0, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT, NULL );
-	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, 0 );
+	glBindTexture( GL_TEXTURE_RECTANGLE, _depthTexture );
+	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+	glTexImage2D( GL_TEXTURE_RECTANGLE, 0, GL_DEPTH24_STENCIL8_EXT, bufferWidth, bufferHeight, 0, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT, NULL );
+	glBindTexture( GL_TEXTURE_RECTANGLE, 0 );
 	GV_CHECK_GL_ERROR();
 
 	// [ 3 ] - initialize framebuffer used to read/write color and depth
@@ -210,14 +210,14 @@ void GsCommonGraphicsPass::initializeBuffers()
 	glBindFramebuffer( GL_FRAMEBUFFER, _frameBuffer );
 	if ( _type == 0 )
 	{
-		glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_RECTANGLE_EXT, _colorTexture, 0 );
+		glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_RECTANGLE, _colorTexture, 0 );
 	}
 	else
 	{
 		glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _colorRenderBuffer );
 	}
-	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_RECTANGLE_EXT, _depthTexture, 0 );
-	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_RECTANGLE_EXT, _depthTexture, 0 );
+	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_RECTANGLE, _depthTexture, 0 );
+	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_RECTANGLE, _depthTexture, 0 );
 	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
 	GV_CHECK_GL_ERROR();
 }

@@ -193,7 +193,7 @@ void GsProxyGeometryHandler::render()
 	//// --------------------------------------------------------------
 
 	// Render from buffer object
-
+#if 0 // comment until port to OPenGL 4.6
 	//glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );
 	glColor3f( 1.0f, 1.0f, 1.0f );
 	glPointSize( 5.0f );
@@ -210,4 +210,5 @@ void GsProxyGeometryHandler::render()
 	// Unbind buffer
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glBindBuffer( GL_ARRAY_BUFFER, 0 );
+#endif
 }

@@ -47,7 +47,7 @@
  ******************************************************************************/
 
 // OpenGL
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 // Cuda
 #include <cuda.h>

@@ -56,7 +56,6 @@
 // cudpp
 #include <cudpp.h>
 
-
 // CUDA
 #include <helper_math.h>
 

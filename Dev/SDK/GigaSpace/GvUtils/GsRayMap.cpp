@@ -208,16 +208,16 @@ void GsRayMap::setResolution( unsigned int pWidth, unsigned int pHeight )
 		}
 	}
 
-	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, _rayMap );
+	glBindTexture( GL_TEXTURE_RECTANGLE, _rayMap );
 
 	// Texture parameters
-	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
 	// Allocate texture storage
-	GLenum target = GL_TEXTURE_RECTANGLE_EXT;
+	GLenum target = GL_TEXTURE_RECTANGLE;
 	GLint level = 0;
 	GLint internalFormat = GL_RGBA32F;
 	GLsizei width = pWidth;
@@ -228,7 +228,7 @@ void GsRayMap::setResolution( unsigned int pWidth, unsigned int pHeight )
 	const GLvoid* pixels = NULL;
 	glTexImage2D( target, level, internalFormat, width, height, border, format, type, pixels );
 	
-	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, 0 );
+	glBindTexture( GL_TEXTURE_RECTANGLE, 0 );
 	
 	GV_CHECK_GL_ERROR();
 
@@ -236,7 +236,7 @@ void GsRayMap::setResolution( unsigned int pWidth, unsigned int pHeight )
 	//
 	// Attach an OpenGL texture or renderbuffer object to an internal graphics resource 
 	// that will be mapped in CUDA memory space during rendering.
-	error = _graphicsResource->registerImage( _rayMap, GL_TEXTURE_RECTANGLE_EXT, cudaGraphicsRegisterFlagsReadOnly );
+	error = _graphicsResource->registerImage( _rayMap, GL_TEXTURE_RECTANGLE, cudaGraphicsRegisterFlagsReadOnly );
 	if ( error != cudaSuccess )
 	{
 		// TO DO
@@ -275,7 +275,7 @@ void GsRayMap::render()
 
 	glBindFramebuffer( GL_FRAMEBUFFER, _frameBuffer );
 
-	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_RECTANGLE_EXT, _rayMap, 0 );
+	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_RECTANGLE, _rayMap, 0 );
 	GV_CHECK_GL_ERROR();
 
 	_shaderProgram->use();
@@ -300,10 +300,14 @@ void GsRayMap::render()
 
 		// Extract view transformations
 	float4x4 modelViewMatrix;
+#if 0 // commit until port to OpenGL 4.6
 	glGetFloatv( GL_MODELVIEW_MATRIX, modelViewMatrix._array );
+#endif
 	float4x4 invModelViewMatrix = inverse( modelViewMatrix );
 	float4x4 projectionMatrix;
+#if 0 // commit until port to OpenGL 4.6
 	glGetFloatv( GL_PROJECTION_MATRIX, projectionMatrix._array );
+#endif
 	//float4x4 invMVP = inverse( mul( projectionMatrix, modelViewMatrix ) );
 	//------ TEST
 	//invModelViewMatrix = invMVP;
@@ -375,6 +379,7 @@ void GsRayMap::render()
 	}
 	GV_CHECK_GL_ERROR();
 
+#if 0 // comment until port to OpenGL 4.6
 	glMatrixMode( GL_MODELVIEW );
 	glPushMatrix();
 	glLoadIdentity();
@@ -383,11 +388,11 @@ void GsRayMap::render()
 	glPushMatrix();
 	glLoadIdentity();
 
-	glEnable( GL_TEXTURE_RECTANGLE_EXT );
+	glEnable( GL_TEXTURE_RECTANGLE );
 	glDisable( GL_DEPTH_TEST );
 
 	glActiveTexture( GL_TEXTURE0 );
-	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, _rayMap );
+	glBindTexture( GL_TEXTURE_RECTANGLE, _rayMap );
 	
 	// Draw a quad on full screen
 	glBegin( GL_QUADS );
@@ -398,9 +403,9 @@ void GsRayMap::render()
 	glEnd();
 
 	glActiveTexture( GL_TEXTURE0 );
-	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, 0 );
+	glBindTexture( GL_TEXTURE_RECTANGLE, 0 );
 
-	glDisable( GL_TEXTURE_RECTANGLE_EXT );
+	glDisable( GL_TEXTURE_RECTANGLE );
 	//glEnable( GL_DEPTH_TEST );
 
 	glPopMatrix();
@@ -410,6 +415,8 @@ void GsRayMap::render()
 	glUseProgram( 0 );
 
 	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+
+#endif
 }
 
 /******************************************************************************

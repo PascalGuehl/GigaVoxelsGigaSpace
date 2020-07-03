@@ -57,9 +57,9 @@
 #include <cuda_runtime.h>
 
 // OpenGL
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+#include <glad/glad.h>
+//#include <GL/gl.h>
+//#include <GL/glu.h>
  
 // Windows
 #ifdef WIN32
@@ -103,12 +103,12 @@ inline bool checkGLError( const char* pFile, const int pLine )
 // Windows specific stuff
 #ifdef _WIN32
 		char buf[ 512 ];
-		sprintf( buf, "\n%s(%i) : GL Error : %s\n\n", pFile, pLine, gluErrorString( error ) );
+		//sprintf( buf, "\n%s(%i) : GL Error : %s\n\n", pFile, pLine, gluErrorString( error ) );
 		OutputDebugStringA( buf );
 #endif
 
 		fprintf( stderr, "GL Error in file '%s' in line %d :\n", pFile, pLine );
-		fprintf( stderr, "%s\n", gluErrorString( error ) );
+		//fprintf( stderr, "%s\n", gluErrorString( error ) );
 
 		return false;
 	}

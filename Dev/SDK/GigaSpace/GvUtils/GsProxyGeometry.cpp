@@ -227,7 +227,11 @@ void GsProxyGeometry::getProjected2DBBox( const GLdouble* pModel, const GLdouble
 	for ( int i = 0; i < 8; i++ )
 	{
 		// Replace following code by gluProject code to speed computation.
+#if 0 // comment until port to OpenGL 4.6 and no more  glu ?
 		GLint isOK = gluProject( _geometry[ i ][ 0 ], _geometry[ i ][ 1 ], _geometry[ i ][ 2 ], pModel, pProj, pView, &winX, &winY, &winZ );
+#else
+		GLint isOK = 0;
+#endif
 		if ( ! isOK )
 		{
 			int toto = 0;

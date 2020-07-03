@@ -50,7 +50,7 @@
 #include "GvCore/GsCoreConfig.h"
 
 // OpenGL
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 // Plateform specific
 #ifdef WIN32
@@ -79,9 +79,9 @@
 
 inline void checkGLError(const char *functionName) {
    GLenum error;
-   while (( error = glGetError() ) != GL_NO_ERROR) {
-      fprintf (stderr, "[%s] GL error %s \n", functionName, gluErrorString(error));
-   }
+   //while (( error = glGetError() ) != GL_NO_ERROR) {
+   //   fprintf (stderr, "[%s] GL error %s \n", functionName, gluErrorString(error));
+   //}
 }
 
 namespace GvUtils

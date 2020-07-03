@@ -206,9 +206,9 @@
 //	glLoadIdentity();
 //
 //	glDisable( GL_DEPTH_TEST );
-//	glEnable( GL_TEXTURE_RECTANGLE_EXT );
+//	glEnable( GL_TEXTURE_RECTANGLE );
 //	glActiveTexture( GL_TEXTURE0 );
-//	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, _colorTex );
+//	glBindTexture( GL_TEXTURE_RECTANGLE, _colorTex );
 //
 //	// Draw a full screen quad
 //	GLint sMin = 0;
@@ -224,8 +224,8 @@
 //	glEnd();
 //
 //	glActiveTexture( GL_TEXTURE0 );
-//	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, 0 );
-//	glDisable( GL_TEXTURE_RECTANGLE_EXT );
+//	glBindTexture( GL_TEXTURE_RECTANGLE, 0 );
+//	glDisable( GL_TEXTURE_RECTANGLE );
 //	
 //	glPopMatrix();
 //	glMatrixMode( GL_MODELVIEW );
@@ -290,13 +290,13 @@
 //	}
 //
 //	glGenTextures( 1, &_colorTex );
-//	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, _colorTex );
-//	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-//	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-//	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-//	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-//	glTexImage2D( GL_TEXTURE_RECTANGLE_EXT, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
-//	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, 0 );
+//	glBindTexture( GL_TEXTURE_RECTANGLE, _colorTex );
+//	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+//	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+//	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+//	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+//	glTexImage2D( GL_TEXTURE_RECTANGLE, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
+//	glBindTexture( GL_TEXTURE_RECTANGLE, 0 );
 //	GV_CHECK_GL_ERROR();
 //
 //	glGenBuffers( 1, &_depthBuffer );
@@ -306,32 +306,32 @@
 //	GV_CHECK_GL_ERROR();
 //
 //	glGenTextures( 1, &_depthTex );
-//	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, _depthTex );
-//	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-//	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-//	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-//	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-//	glTexImage2D( GL_TEXTURE_RECTANGLE_EXT, 0, GL_DEPTH24_STENCIL8_EXT, width, height, 0, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT, NULL );
-//	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, 0 );
+//	glBindTexture( GL_TEXTURE_RECTANGLE, _depthTex );
+//	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+//	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+//	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+//	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+//	glTexImage2D( GL_TEXTURE_RECTANGLE, 0, GL_DEPTH24_STENCIL8_EXT, width, height, 0, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT, NULL );
+//	glBindTexture( GL_TEXTURE_RECTANGLE, 0 );
 //	GV_CHECK_GL_ERROR();
 //
 //	glGenFramebuffers( 1, &_frameBuffer );
 //	glBindFramebuffer( GL_FRAMEBUFFER, _frameBuffer );
-//	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_RECTANGLE_EXT, _colorTex, 0 );
-//	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_RECTANGLE_EXT, _depthTex, 0 );
-//	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_RECTANGLE_EXT, _depthTex, 0 );
+//	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_RECTANGLE, _colorTex, 0 );
+//	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_RECTANGLE, _depthTex, 0 );
+//	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_RECTANGLE, _depthTex, 0 );
 //	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
 //	GV_CHECK_GL_ERROR();
 //
 //	// Create CUDA resources from OpenGL objects
 //	if ( _displayOctree )
 //	{
-//		_pipeline->editRenderer()->connect( GsGraphicsInteroperabiltyHandler::eColorReadWriteSlot, _colorTex, GL_TEXTURE_RECTANGLE_EXT );
+//		_pipeline->editRenderer()->connect( GsGraphicsInteroperabiltyHandler::eColorReadWriteSlot, _colorTex, GL_TEXTURE_RECTANGLE );
 //		_pipeline->editRenderer()->connect( GsGraphicsInteroperabiltyHandler::eDepthReadSlot, _depthBuffer );
 //	}
 //	else
 //	{
-//		_pipeline->editRenderer()->connect( GsGraphicsInteroperabiltyHandler::eColorWriteSlot, _colorTex, GL_TEXTURE_RECTANGLE_EXT );
+//		_pipeline->editRenderer()->connect( GsGraphicsInteroperabiltyHandler::eColorWriteSlot, _colorTex, GL_TEXTURE_RECTANGLE );
 //	}
 //}
 //
@@ -355,12 +355,12 @@
 //
 //	if ( _displayOctree )
 //	{
-//		_pipeline->editRenderer()->connect( GsGraphicsInteroperabiltyHandler::eColorReadWriteSlot, _colorTex, GL_TEXTURE_RECTANGLE_EXT );
+//		_pipeline->editRenderer()->connect( GsGraphicsInteroperabiltyHandler::eColorReadWriteSlot, _colorTex, GL_TEXTURE_RECTANGLE );
 //		_pipeline->editRenderer()->connect( GsGraphicsInteroperabiltyHandler::eDepthReadSlot, _depthBuffer );
 //	}
 //	else
 //	{
-//		_pipeline->editRenderer()->connect( GsGraphicsInteroperabiltyHandler::eColorWriteSlot, _colorTex, GL_TEXTURE_RECTANGLE_EXT );
+//		_pipeline->editRenderer()->connect( GsGraphicsInteroperabiltyHandler::eColorWriteSlot, _colorTex, GL_TEXTURE_RECTANGLE );
 //	}
 //}
 //

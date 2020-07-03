@@ -96,6 +96,9 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/../../3rdParty/Loki/include" )
 # GigaSpace SDK
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/../../Install/GigaSpaceProject/include" )
 
+# tinyxml
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/../../3rdParty/tinyxml/include" )
+
 ##################################################################################
 # Program
 ##################################################################################
@@ -105,10 +108,32 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/../../Install/GigaSpaceProject
 file( GLOB incList "${CMAKE_CURRENT_SOURCE_DIR}/*.h" )
 file( GLOB inlList "${CMAKE_CURRENT_SOURCE_DIR}/*.inl" )
 file( GLOB srcList "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" )
+file( GLOB cuList "${CMAKE_CURRENT_SOURCE_DIR}/*.cu" )
 
-file( GLOB incList "${CMAKE_CURRENT_SOURCE_DIR}/GvCore/*.h" )
-file( GLOB inlList "${CMAKE_CURRENT_SOURCE_DIR}/GvCore/*.hpp" )
-file( GLOB srcList "${CMAKE_CURRENT_SOURCE_DIR}/GvCore/*.cpp" )
+file( GLOB core_incList "${CMAKE_CURRENT_SOURCE_DIR}/GvCore/*.h" )
+file( GLOB core_inlList "${CMAKE_CURRENT_SOURCE_DIR}/GvCore/*.inl" )
+file( GLOB core_srcList "${CMAKE_CURRENT_SOURCE_DIR}/GvCore/*.cpp" )
+file( GLOB core_cuList "${CMAKE_CURRENT_SOURCE_DIR}/GvCore/*.cu" )
+
+file( GLOB cache_incList "${CMAKE_CURRENT_SOURCE_DIR}/GvCache/*.h" )
+file( GLOB cache_inlList "${CMAKE_CURRENT_SOURCE_DIR}/GvCache/*.inl" )
+file( GLOB cache_srcList "${CMAKE_CURRENT_SOURCE_DIR}/GvCache/*.cpp" )
+file( GLOB cache_cuList "${CMAKE_CURRENT_SOURCE_DIR}/GvCache/*.cu" )
+
+file( GLOB structure_incList "${CMAKE_CURRENT_SOURCE_DIR}/GvStructure/*.h" )
+file( GLOB structure_inlList "${CMAKE_CURRENT_SOURCE_DIR}/GvStructure/*.inl" )
+file( GLOB structure_srcList "${CMAKE_CURRENT_SOURCE_DIR}/GvStructure/*.cpp" )
+file( GLOB structure_cuList "${CMAKE_CURRENT_SOURCE_DIR}/GvStructure/*.cu" )
+
+file( GLOB utils_incList "${CMAKE_CURRENT_SOURCE_DIR}/GvUtils/*.h" )
+file( GLOB utils_inlList "${CMAKE_CURRENT_SOURCE_DIR}/GvUtils/*.inl" )
+file( GLOB utils_srcList "${CMAKE_CURRENT_SOURCE_DIR}/GvUtils/*.cpp" )
+file( GLOB utils_cuList "${CMAKE_CURRENT_SOURCE_DIR}/GvUtils/*.cu" )
+
+file( GLOB rendering_incList "${CMAKE_CURRENT_SOURCE_DIR}/GvRendering/*.h" )
+file( GLOB rendering_inlList "${CMAKE_CURRENT_SOURCE_DIR}/GvRendering/*.inl" )
+file( GLOB rendering_srcList "${CMAKE_CURRENT_SOURCE_DIR}/GvRendering/*.cpp" )
+file( GLOB rendering_cuList "${CMAKE_CURRENT_SOURCE_DIR}/GvRendering/*.cu" )
 
 # - shaders
 file( GLOB shaderList "${CMAKE_CURRENT_SOURCE_DIR}/../Shaders/*.vert" )
@@ -119,9 +144,10 @@ file( GLOB shaderList "${CMAKE_CURRENT_SOURCE_DIR}/../Shaders/*.tesc" )
 file( GLOB shaderList "${CMAKE_CURRENT_SOURCE_DIR}/../Shaders/*.comp" )
 
 # Group files in IDE (Visual Studio)
-source_group( "Include" FILES ${incList} )
-source_group( "Inline" FILES ${inlList} )
-source_group( "Source" FILES ${srcList} )
+source_group( "Include" FILES ${incList} ${core_incList} ${cache_incList} ${structure_incList} ${utils_incList} ${rendering_incList} )
+source_group( "Inline" FILES ${inlList} ${core_inlList} ${cache_inlList} ${structure_inlList} ${utils_inlList} ${rendering_inlList} )
+source_group( "Source" FILES ${srcList} ${core_srcList} ${cache_srcList} ${structure_srcList} ${utils_srcList} ${rendering_srcList} )
+source_group( "Cuda" FILES ${cuList} ${core_cuList} ${cache_cuList} ${structure_cuList} ${utils_cuList} ${rendering_cuList} )
 # - shaders
 source_group( "Shaders" FILES ${shaderList} )
 
@@ -130,11 +156,32 @@ source_group( "Shaders" FILES ${shaderList} )
 set( resList ${resList} ${incList} )
 set( resList ${resList} ${inlList} )
 set( resList ${resList} ${shaderList} )
+
+set( core_resList ${core_resList} ${core_incList} )
+set( core_resList ${core_resList} ${core_inlList} )
+set( core_resList ${core_resList} ${core_shaderList} )
+
+set( cache_resList ${cache_resList} ${cache_incList} )
+set( cache_resList ${cache_resList} ${cache_inlList} )
+set( cache_resList ${cache_resList} ${cache_shaderList} )
+
+set( structure_resList ${structure_resList} ${structure_incList} )
+set( structure_resList ${structure_resList} ${structure_inlList} )
+set( structure_resList ${structure_resList} ${structure_shaderList} )
+
+set( utils_resList ${utils_resList} ${utils_incList} )
+set( utils_resList ${utils_resList} ${utils_inlList} )
+set( utils_resList ${utils_resList} ${utils_shaderList} )
+
+set( rendering_resList ${rendering_resList} ${rendering_incList} )
+set( rendering_resList ${rendering_resList} ${rendering_inlList} )
+set( rendering_resList ${rendering_resList} ${rendering_shaderList} )
+
 # target
 #add_library( ${PROJECT_NAME} SHARED ${srcList} ${resList} )
 # add current GPU architecture at runtime
 set( GENCODE ${CUDA_ARCH_FLAGS} )
-cuda_add_library( ${PROJECT_NAME} SHARED ${srcList} ${resList} OPTIONS ${GENCODE} )
+cuda_add_library( ${PROJECT_NAME} SHARED ${srcList} ${core_srcList} ${cache_srcList} ${structure_srcList} ${utils_srcList} ${rendering_srcList} ${cuList} ${core_cuList} ${cache_cuList} ${structure_cuList} ${utils_cuList} ${rendering_cuList} ${resList} ${core_resList} ${cache_resList} ${structure_resList} ${utils_resList} ${rendering_resList} OPTIONS ${GENCODE} )
 
 #####################################################
 set( CUSTOM_DEBUG_POSTFIX "d" )
@@ -164,6 +211,9 @@ target_link_libraries( ${PROJECT_NAME} cudpp )
 target_link_libraries( ${PROJECT_NAME} GsGraphics )
 target_link_libraries( ${PROJECT_NAME} GsCompute )
 
+# tinyxml
+target_link_libraries( ${PROJECT_NAME} tinyxml )
+
 # Project property
 set_property( TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11 )
 
@@ -173,8 +223,14 @@ set_property( TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11 )
 
 # Libraries
 install( TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin )
-install( TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION lib ) 
+install( TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION lib )
+
 install( FILES ${resList} DESTINATION include/${PROJECT_NAME} )
+install( FILES ${core_resList} DESTINATION include/${PROJECT_NAME}/GvCore )
+install( FILES ${cache_resList} DESTINATION include/${PROJECT_NAME}/GvCache )
+install( FILES ${structure_resList} DESTINATION include/${PROJECT_NAME}/GvStructure )
+install( FILES ${utils_resList} DESTINATION include/${PROJECT_NAME}/GvUtils )
+install( FILES ${rendering_resList} DESTINATION include/${PROJECT_NAME}/GvRendering )
 
 # Copy library
 #add_custom_command(TARGET ${PROJECT_NAME}
