@@ -188,3 +188,8 @@ void GsTransferFunction::bindToTextureReference( const void* pSymbol, const char
 	// Bind array to 3D texture
 	GS_CUDA_SAFE_CALL( cudaBindTextureToArray( (const textureReference *)texRefPtr, _dataArray, &_channelFormatDesc ) );
 }
+void GsTransferFunction::bindToTextureReference( textureReference* pTextureReference )
+{
+	// Bind array to 3D texture
+	GS_CUDA_SAFE_CALL( cudaBindTextureToArray( (const textureReference *)pTextureReference, _dataArray, &_channelFormatDesc ) );
+}

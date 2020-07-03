@@ -212,7 +212,17 @@ target_link_libraries( ${PROJECT_NAME} GsGraphics )
 target_link_libraries( ${PROJECT_NAME} GsCompute )
 
 # tinyxml
-target_link_libraries( ${PROJECT_NAME} tinyxml )
+#target_link_libraries( ${PROJECT_NAME} "${CMAKE_CURRENT_SOURCE_DIR}/../../3rdParty/tinyxml/lib/tinyxml" )
+#find_library( tinyxml_LIBRARY_DEBUG
+#    NAMES tinyxml{CUSTOM_DEBUG_POSTFIX}
+#    HINTS "${CMAKE_CURRENT_SOURCE_DIR}/../../3rdParty/tinyxml/lib"
+#)
+#find_library( tinyxml_LIBRARY_RELEASE
+#    NAMES tinyxml
+#    HINTS "${CMAKE_CURRENT_SOURCE_DIR}/../../3rdParty/tinyxml/lib"
+#)
+#target_link_libraries( ${PROJECT_NAME} debug ${tinyxml_LIBRARY_DEBUG} optimized ${tinyxml_LIBRARY_RELEASE} )
+target_link_libraries( ${PROJECT_NAME} debug "${CMAKE_CURRENT_SOURCE_DIR}/../../3rdParty/tinyxml/lib/tinyxml${CUSTOM_DEBUG_POSTFIX}.lib" optimized "${CMAKE_CURRENT_SOURCE_DIR}/../../3rdParty/tinyxml/lib/tinyxml.lib" )
 
 # Project property
 set_property( TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11 )

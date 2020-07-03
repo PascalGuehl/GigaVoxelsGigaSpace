@@ -52,6 +52,8 @@
 // Cuda
 #include <vector_types.h>
 #include <driver_types.h>
+// Pascal
+#include <texture_types.h>
 
 // STL
 #include <string>
@@ -172,6 +174,7 @@ public:
 	 * @param pAddressMode type of texture access mode
 	 */
 	void bindToTextureReference( const void* pSymbol, const char* pTexRefName, bool pNormalizedAccess, cudaTextureFilterMode pFilterMode, cudaTextureAddressMode pAddressMode );
+	void bindToTextureReference( textureReference* pTextureReference );
 
 	/**************************************************************************
 	 **************************** PROTECTED SECTION ***************************
