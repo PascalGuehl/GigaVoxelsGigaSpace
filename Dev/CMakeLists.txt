@@ -47,7 +47,7 @@ add_definitions( -DGS_BIN_PATH="${GS_BIN_PATH}" )
 add_subdirectory( "${CMAKE_SOURCE_DIR}/SDK" )
 
 # Demos
-#add_subdirectory( "${CMAKE_SOURCE_DIR}/Demos" )
+add_subdirectory( "${CMAKE_SOURCE_DIR}/Demos" )
 
 # Tools
 #add_subdirectory( "${CMAKE_SOURCE_DIR}/Tools" )
@@ -72,10 +72,10 @@ install( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/assimp/bin
     PATTERN "*.dll"
 )
 # - cudpp
-install( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/cudpp/lib
-    DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/Install/GigaSpaceProject
+install( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/cudpp/lib/
+    DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/Install/GigaSpaceProject/bin
     FILES_MATCHING
-    PATTERN "*.dll"
+	PATTERN "*.dll"
 )
 
 # Configuration files
