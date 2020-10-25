@@ -48,7 +48,7 @@
 
 // GigaSpace
 #include "GvCore/GsCoreConfig.h"
-#include "GvCore/GsISerializable.h"
+#include <GsSpaceCore/GsISerializable.h>
 
 /******************************************************************************
  ************************* DEFINE AND CONSTANT SECTION ************************
@@ -83,7 +83,7 @@ namespace GvStructure
  * @param TDataStructure The volume tree data structure (nodes and bricks)
  * @param ProducerType The associated user producer (host or device)
  */
-class GIGASPACE_EXPORT GsIDataProductionManager : public GvCore::GsISerializable
+class GIGASPACE_EXPORT GsIDataProductionManager : public GsCore::GsISerializable
 {
 
 	/**************************************************************************

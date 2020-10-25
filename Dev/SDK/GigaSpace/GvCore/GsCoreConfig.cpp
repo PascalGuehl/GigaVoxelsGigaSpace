@@ -46,7 +46,7 @@
  ******************************************************************************/
 
 // GigaSpace
-#include <GsCompute\GsDataParallelPrimitives.h>
+#include <GsCompute/GsDataParallelPrimitives.h>
 
 /******************************************************************************
  ****************************** NAMESPACE SECTION *****************************

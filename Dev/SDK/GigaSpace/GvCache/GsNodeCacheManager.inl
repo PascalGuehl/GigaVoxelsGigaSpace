@@ -90,7 +90,7 @@ namespace GvCache
 template< typename TDataStructure >
 GsNodeCacheManager< TDataStructure >
 ::GsNodeCacheManager( const uint3& pCachesize, PageTableArrayType* pPageTableArray, uint pGraphicsInteroperability )
-:	GvCore::GsISerializable()
+:	GsCore::GsISerializable()
 ,	_cacheSize( pCachesize )
 ,	_policy( ePreventReplacingUsedElementsPolicy )
 {

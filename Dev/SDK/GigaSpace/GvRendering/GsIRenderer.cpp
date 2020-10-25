@@ -54,7 +54,7 @@
 
 // GigaSpace
 using namespace GvRendering;
-using namespace GvCore;
+using namespace GsCore;
 
 /******************************************************************************
  ************************* DEFINE AND CONSTANT SECTION ************************

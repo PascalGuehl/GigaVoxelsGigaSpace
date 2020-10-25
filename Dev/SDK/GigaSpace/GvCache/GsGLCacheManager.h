@@ -66,7 +66,7 @@
 #include "GvCore/GsLinearMemory.h"
 #include "GvCore/GsFunctionalExt.h"
 #include "GvCache/GsCacheManagerResources.h"
-#include "GvCore/GsISerializable.h"
+#include <GsSpaceCore/GsISerializable.h>
 
 /******************************************************************************
  ************************* DEFINE AND CONSTANT SECTION ************************
@@ -127,7 +127,7 @@ namespace GvCache
  * @todo add "virtual" to specific methods
  */
 template< unsigned int TId, typename ElementRes, typename AddressType, typename PageTableArrayType, typename PageTableType >
-class GsGLCacheManager : public GvCore::GsISerializable
+class GsGLCacheManager : public GsCore::GsISerializable
 {
 
 	/**************************************************************************

@@ -55,6 +55,8 @@
 #include <vector_functions.h>
 //#include <driver_types.h>
 
+#include <cuda_fp16.h>
+
 // CUDA SDK
 #include <helper_math.h>
 
@@ -82,10 +84,10 @@
 typedef unsigned int uint;
 typedef unsigned char uchar;
 
-struct /*__align__(4)*/ half2
-{
-	unsigned short x, y;
-};
+//struct /*__align__(4)*/ half2
+//{
+//	unsigned short x, y;
+//};
 
 struct /*__align__(8)*/ half4
 {
@@ -240,12 +242,14 @@ inline unsigned short __float2half_rn_host(float f)
 
 inline half2 make_half2(float x, float y)
 {
-	half2 t;
+	/*half2 t;
 
 	t.x = __float2half_rn_host(x);
 	t.y = __float2half_rn_host(y);
 
-	return t;
+	return t;*/
+
+	return 	__floats2half2_rn( x, y );
 }
 
 inline half4 make_half4(float x, float y, float z, float w)

@@ -48,7 +48,7 @@
 
 // GigaVoxels
 #include "GvCore/GsCoreConfig.h"
-#include "GvCore/GsISerializable.h"
+#include <GsSpaceCore/GsISerializable.h>
 #include "GvCore/GsVectorTypesExt.h"
 
 // Cuda
@@ -86,7 +86,7 @@ namespace GvRendering
  * @param TDerived class used to implement the renderImpl() method
  * that is called by the render() method.
  */
-class GIGASPACE_EXPORT GsIRenderer : public GvCore::GsISerializable
+class GIGASPACE_EXPORT GsIRenderer : public GsCore::GsISerializable
 {
 
 	/**************************************************************************

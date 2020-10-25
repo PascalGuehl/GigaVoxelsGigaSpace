@@ -48,7 +48,7 @@
 
 // GigaVoxels
 #include "GvCore/GsCoreConfig.h"
-#include "GvCore/GsISerializable.h"
+#include <GsSpaceCore/GsISerializable.h>
 #include "GvCore/GsVectorTypesExt.h"
 
 // Loki
@@ -85,7 +85,7 @@ namespace GvStructure
  *
  * ...
  */
-class GIGASPACE_EXPORT GsIDataStructure : public GvCore::GsISerializable
+class GIGASPACE_EXPORT GsIDataStructure : public GsCore::GsISerializable
 {
 
 	/**************************************************************************

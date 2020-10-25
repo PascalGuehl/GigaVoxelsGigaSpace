@@ -135,6 +135,11 @@ file( GLOB rendering_inlList "${CMAKE_CURRENT_SOURCE_DIR}/GvRendering/*.inl" )
 file( GLOB rendering_srcList "${CMAKE_CURRENT_SOURCE_DIR}/GvRendering/*.cpp" )
 file( GLOB rendering_cuList "${CMAKE_CURRENT_SOURCE_DIR}/GvRendering/*.cu" )
 
+file( GLOB performance_incList "${CMAKE_CURRENT_SOURCE_DIR}/GvPerfMon/*.h" )
+file( GLOB performance_inlList "${CMAKE_CURRENT_SOURCE_DIR}/GvPerfMon/*.inl" )
+file( GLOB performance_srcList "${CMAKE_CURRENT_SOURCE_DIR}/GvPerfMon/*.cpp" )
+file( GLOB performance_cuList "${CMAKE_CURRENT_SOURCE_DIR}/GvPerfMon/*.cu" )
+
 # - shaders
 file( GLOB shaderList "${CMAKE_CURRENT_SOURCE_DIR}/../Shaders/*.vert" )
 file( GLOB shaderList "${CMAKE_CURRENT_SOURCE_DIR}/../Shaders/*.frag" )
@@ -144,10 +149,10 @@ file( GLOB shaderList "${CMAKE_CURRENT_SOURCE_DIR}/../Shaders/*.tesc" )
 file( GLOB shaderList "${CMAKE_CURRENT_SOURCE_DIR}/../Shaders/*.comp" )
 
 # Group files in IDE (Visual Studio)
-source_group( "Include" FILES ${incList} ${core_incList} ${cache_incList} ${structure_incList} ${utils_incList} ${rendering_incList} )
-source_group( "Inline" FILES ${inlList} ${core_inlList} ${cache_inlList} ${structure_inlList} ${utils_inlList} ${rendering_inlList} )
-source_group( "Source" FILES ${srcList} ${core_srcList} ${cache_srcList} ${structure_srcList} ${utils_srcList} ${rendering_srcList} )
-source_group( "Cuda" FILES ${cuList} ${core_cuList} ${cache_cuList} ${structure_cuList} ${utils_cuList} ${rendering_cuList} )
+source_group( "Include" FILES ${incList} ${core_incList} ${cache_incList} ${structure_incList} ${utils_incList} ${rendering_incList} ${performance_incList} )
+source_group( "Inline" FILES ${inlList} ${core_inlList} ${cache_inlList} ${structure_inlList} ${utils_inlList} ${rendering_inlList} ${performance_inlList} )
+source_group( "Source" FILES ${srcList} ${core_srcList} ${cache_srcList} ${structure_srcList} ${utils_srcList} ${rendering_srcList} ${performance_srcList} )
+source_group( "Cuda" FILES ${cuList} ${core_cuList} ${cache_cuList} ${structure_cuList} ${utils_cuList} ${rendering_cuList} ${performance_cuList} )
 # - shaders
 source_group( "Shaders" FILES ${shaderList} )
 
@@ -177,11 +182,15 @@ set( rendering_resList ${rendering_resList} ${rendering_incList} )
 set( rendering_resList ${rendering_resList} ${rendering_inlList} )
 set( rendering_resList ${rendering_resList} ${rendering_shaderList} )
 
+set( performance_resList ${performance_resList} ${performance_incList} )
+set( performance_resList ${performance_resList} ${performance_inlList} )
+set( performance_resList ${performance_resList} ${performance_shaderList} )
+
 # target
 #add_library( ${PROJECT_NAME} SHARED ${srcList} ${resList} )
 # add current GPU architecture at runtime
 set( GENCODE ${CUDA_ARCH_FLAGS} )
-cuda_add_library( ${PROJECT_NAME} SHARED ${srcList} ${core_srcList} ${cache_srcList} ${structure_srcList} ${utils_srcList} ${rendering_srcList} ${cuList} ${core_cuList} ${cache_cuList} ${structure_cuList} ${utils_cuList} ${rendering_cuList} ${resList} ${core_resList} ${cache_resList} ${structure_resList} ${utils_resList} ${rendering_resList} OPTIONS ${GENCODE} )
+cuda_add_library( ${PROJECT_NAME} SHARED ${srcList} ${core_srcList} ${cache_srcList} ${structure_srcList} ${utils_srcList} ${rendering_srcList} ${performance_srcList} ${cuList} ${core_cuList} ${cache_cuList} ${structure_cuList} ${utils_cuList} ${rendering_cuList} ${performance_cuList} ${resList} ${core_resList} ${cache_resList} ${structure_resList} ${utils_resList} ${rendering_resList} ${performance_resList} OPTIONS ${GENCODE} )
 
 #####################################################
 set( CUSTOM_DEBUG_POSTFIX "d" )
@@ -210,6 +219,7 @@ target_link_libraries( ${PROJECT_NAME} cudpp )
 # GigaSpace SDK
 target_link_libraries( ${PROJECT_NAME} GsGraphics )
 target_link_libraries( ${PROJECT_NAME} GsCompute )
+target_link_libraries( ${PROJECT_NAME} GsSpaceCore )
 
 # tinyxml
 #target_link_libraries( ${PROJECT_NAME} "${CMAKE_CURRENT_SOURCE_DIR}/../../3rdParty/tinyxml/lib/tinyxml" )
@@ -241,6 +251,7 @@ install( FILES ${cache_resList} DESTINATION include/${PROJECT_NAME}/GvCache )
 install( FILES ${structure_resList} DESTINATION include/${PROJECT_NAME}/GvStructure )
 install( FILES ${utils_resList} DESTINATION include/${PROJECT_NAME}/GvUtils )
 install( FILES ${rendering_resList} DESTINATION include/${PROJECT_NAME}/GvRendering )
+install( FILES ${performance_resList} DESTINATION include/${PROJECT_NAME}/GvPerfMon )
 
 # Copy library
 #add_custom_command(TARGET ${PROJECT_NAME}

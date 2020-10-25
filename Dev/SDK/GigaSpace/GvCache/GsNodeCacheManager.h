@@ -66,7 +66,7 @@
 #include "GvCore/GsLinearMemory.h"
 #include "GvCore/GsFunctionalExt.h"
 #include "GvCache/GsCacheManagerResources.h"
-#include "GvCore/GsISerializable.h"
+#include <GsSpaceCore/GsISerializable.h>
 #include "GvStructure/GsVolumeTreeAddressType.h"
 #include "GvCore/GsVector.h"
 #include "GvCore/GsPageTable.h"
@@ -111,7 +111,7 @@ namespace GvCache
  * @todo add "virtual" to specific methods
  */
 template< typename TDataStructure >
-class GsNodeCacheManager : public GvCore::GsISerializable
+class GsNodeCacheManager : public GsCore::GsISerializable
 {
 
 	/**************************************************************************

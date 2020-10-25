@@ -83,6 +83,12 @@
  ******************************** CLASS USED **********************************
  ******************************************************************************/
 
+// GigaVoxels
+namespace GsGraphics
+{
+	class GsShaderProgram;
+}
+
 /******************************************************************************
  ****************************** CLASS DEFINITION ******************************
  ******************************************************************************/
@@ -285,6 +291,7 @@ struct GsVolumeTree : public GsIDataStructure
 	 * Debugging helpers
 	 */
 	void render();
+	void render( const float4x4& pModelMatrix, const float4x4& pViewMatrix, const float4x4& pProjectionMatrix, const int4& pViewport );
 
 	/**
 	 * Get the node tile resolution.
@@ -372,6 +379,17 @@ protected:
 	float4 _nodeHasBrickNotTerminalColor;
 	float4 _nodeIsBrickNotInCacheColor;
 	float4 _nodeEmptyOrConstantColor;
+
+	/**
+	 * Shader program
+	 */
+	GsGraphics::GsShaderProgram* _renderingShaderProgram;
+	
+	/**
+	 * For debugging purpose
+	 */
+	unsigned int _modelMatrixUniformLocation;
+	unsigned int _colorUniformLocation;
 
 	/******************************** METHODS *********************************/
 

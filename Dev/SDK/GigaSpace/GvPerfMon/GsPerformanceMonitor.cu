@@ -46,15 +46,14 @@
  ******************************************************************************/
 
 // GigaVoxels
-#include "GvCore/GsFunctionalExt.h"
+//#include "GvCore/GsFunctionalExt.h"
 
 // STL
 #include <iostream>
 #include <fstream>
 
 // OpenGL
-#include <GL/glew.h>
-#include <GL/freeglut.h>
+#include <glad/glad.h>
 
 // Thrust
 #include <thrust/device_vector.h>
@@ -113,12 +112,12 @@ bool CUDAPerfMon::_isActivated = true;
  ******************************************************************************/
 inline void ccRenderBitmapString( float x, float y, float z, void* font, const char* string )
 {
-	char* c;
+	/*char* c;
 	glRasterPos3f( x, y, z );
 	for ( c = const_cast< char* >( string ); *c != '\0'; c++ )
 	{
 		glutBitmapCharacter( font, *c );
-	}
+	}*/
 }
 
 /******************************************************************************
@@ -129,12 +128,12 @@ inline void ccRenderBitmapString( float x, float y, float z, void* font, const c
  ******************************************************************************/
 inline void ccDrawQuadGL( const float2& startPos, const float2& endPos )
 {
-	glBegin( GL_QUADS );
-		glVertex3f( startPos.x, startPos.y,	0.f );
-		glVertex3f( endPos.x,	startPos.y,	0.f );
-		glVertex3f( endPos.x,	endPos.y,	0.f );
-		glVertex3f( startPos.x,	endPos.y,	0.f );
-	glEnd();
+	//glBegin( GL_QUADS );
+	//	glVertex3f( startPos.x, startPos.y,	0.f );
+	//	glVertex3f( endPos.x,	startPos.y,	0.f );
+	//	glVertex3f( endPos.x,	endPos.y,	0.f );
+	//	glVertex3f( startPos.x,	endPos.y,	0.f );
+	//glEnd();
 }
 
 /******************************************************************************
@@ -650,48 +649,48 @@ void CUDAPerfMon::displayFrameGL( uint eventType )
  ******************************************************************************/
 void CUDAPerfMon::displayOverlayGL( uchar* overlayBuffer )
 {
-	uint3 frameRes = d_timersArray->getResolution();
+	//uint3 frameRes = d_timersArray->getResolution();
 
-	glMatrixMode( GL_MODELVIEW );
-	glPushMatrix();
-	glLoadIdentity();
-	glMatrixMode( GL_PROJECTION );
-	glPushMatrix();
-	glLoadIdentity();
+	//glMatrixMode( GL_MODELVIEW );
+	//glPushMatrix();
+	//glLoadIdentity();
+	//glMatrixMode( GL_PROJECTION );
+	//glPushMatrix();
+	//glLoadIdentity();
 
-	glEnable( GL_TEXTURE_RECTANGLE_EXT );
-	glEnable( GL_BLEND );
-	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+	//glEnable( GL_TEXTURE_RECTANGLE_EXT );
+	//glEnable( GL_BLEND );
+	//glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, overlayTex );
-	glTexImage2D( GL_TEXTURE_RECTANGLE_EXT, 0, GL_R8, frameRes.x, frameRes.y, 0, GL_RED, GL_UNSIGNED_BYTE, overlayBuffer );
-	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, 0 );
+	//glBindTexture( GL_TEXTURE_RECTANGLE_EXT, overlayTex );
+	//glTexImage2D( GL_TEXTURE_RECTANGLE_EXT, 0, GL_R8, frameRes.x, frameRes.y, 0, GL_RED, GL_UNSIGNED_BYTE, overlayBuffer );
+	//glBindTexture( GL_TEXTURE_RECTANGLE_EXT, 0 );
 
-	//dispOverlayProg->setSamplerParam("inputOverlayTex", GL_TEXTURE_RECTANGLE_EXT, overlayTex);
-	//dispOverlayProg->bind(true);
-	glEnable( GL_TEXTURE_RECTANGLE_EXT );
-	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, overlayTex );
+	////dispOverlayProg->setSamplerParam("inputOverlayTex", GL_TEXTURE_RECTANGLE_EXT, overlayTex);
+	////dispOverlayProg->bind(true);
+	//glEnable( GL_TEXTURE_RECTANGLE_EXT );
+	//glBindTexture( GL_TEXTURE_RECTANGLE_EXT, overlayTex );
 
-	GLint u = frameRes.x;
-	GLint v = frameRes.y;
+	//GLint u = frameRes.x;
+	//GLint v = frameRes.y;
 
-	glBegin( GL_QUADS );
-		glTexCoord2i( 0, v ); glVertex2i( -1, -1 );
-		glTexCoord2i( u, v ); glVertex2i(  1, -1 );
-		glTexCoord2i( u, 0 ); glVertex2i(  1,  1 );
-		glTexCoord2i( 0, 0 ); glVertex2i( -1,  1 );
-	glEnd();
+	//glBegin( GL_QUADS );
+	//	glTexCoord2i( 0, v ); glVertex2i( -1, -1 );
+	//	glTexCoord2i( u, v ); glVertex2i(  1, -1 );
+	//	glTexCoord2i( u, 0 ); glVertex2i(  1,  1 );
+	//	glTexCoord2i( 0, 0 ); glVertex2i( -1,  1 );
+	//glEnd();
 
-	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, 0 );
-	//dispOverlayProg->unbind(true);
-	
-	glDisable( GL_TEXTURE_RECTANGLE_EXT );
-	glDisable( GL_BLEND );
+	//glBindTexture( GL_TEXTURE_RECTANGLE_EXT, 0 );
+	////dispOverlayProg->unbind(true);
+	//
+	//glDisable( GL_TEXTURE_RECTANGLE_EXT );
+	//glDisable( GL_BLEND );
 
-	glMatrixMode( GL_PROJECTION );
-	glPopMatrix();
-	glMatrixMode( GL_MODELVIEW );
-	glPopMatrix();
+	//glMatrixMode( GL_PROJECTION );
+	//glPopMatrix();
+	//glMatrixMode( GL_MODELVIEW );
+	//glPopMatrix();
 }
 
 /******************************************************************************

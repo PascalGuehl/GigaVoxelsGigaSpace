@@ -45,6 +45,8 @@
 
 // GigaVoxels
 #include "GvCore/GsError.h"
+#include <GsSpaceCore/GsEnvironment.h>
+#include <GsGraphics/GsShaderProgram.h>
 
 // STL
 #include <iostream>
@@ -86,6 +88,7 @@ GsVolumeTree< DataTList, NodeTileRes, BrickRes, BorderSize, TDataStructureKernel
 ,	_nodeHasBrickNotTerminalColor( make_float4( 1.0f, 0.0f, 0.0f, 1.0f ) )	// red
 ,	_nodeIsBrickNotInCacheColor( make_float4( 0.0f, 1.0f, 0.0f, 1.0f ) )	// green
 ,	_nodeEmptyOrConstantColor( make_float4( 0.0f, 0.0f, 1.0f, 1.0f ) )		// blue
+,	_renderingShaderProgram( nullptr )
 {
 	// LOG info
 	std::cout << "\nData Structure ( N3-Tree )" << std::endl;
@@ -225,6 +228,46 @@ void GsVolumeTree< DataTList, NodeTileRes, BrickRes, BorderSize, TDataStructureK
 #endif
 
 	GV_CHECK_CUDA_ERROR( "GsVolumeTree::cuda_Init end" );
+
+	// Create and link a GLSL shader program
+	//QString shaderRepository = GsEnvironment::getDataDir( GsEnvironment::eShadersDir ).c_str();
+	//std::string shaderRepository = GvUtils::GsEnvironment::getDataDir( GvUtils::GsEnvironment::eShadersDir ).c_str();
+	std::string shaderRepository = GsCore::GsEnvironment::getDataDir( GsCore::GsEnvironment::eShadersDir ).c_str();
+	//shaderRepository += QDir::separator();
+	shaderRepository += std::string( "/" );
+	//shaderRepository += QString( "SimpleSphere" );
+	shaderRepository += std::string( "SimpleSphere" );
+	shaderRepository += std::string( "/" );
+	// Initialize points shader program
+	//QString vertexShaderFilename = shaderRepository + QString( "fullscreenQuad_vert.glsl" );
+	std::string vertexShaderFilename = shaderRepository + std::string( "cube_vert.glsl" );
+	//QString fragmentShaderFilename = shaderRepository + QString( "fullscreenQuad_frag.glsl" );
+	std::string fragmentShaderFilename = shaderRepository + std::string( "cube_frag.glsl" );
+	// Initialize shader program
+	_renderingShaderProgram = new GsGraphics::GsShaderProgram();
+	//bool statusOK = _renderingShaderProgram->addShader( GsShaderProgram::eVertexShader, vertexShaderFilename.toStdString() );
+	bool statusOK = _renderingShaderProgram->addShader( GsGraphics::GsShaderProgram::eVertexShader, vertexShaderFilename );
+	assert( statusOK );
+	if ( ! statusOK )
+	{
+		// TO DO
+		// - handle error
+	}
+	//statusOK = _renderingShaderProgram->addShader( GsShaderProgram::eFragmentShader, fragmentShaderFilename.toStdString() );
+	statusOK = _renderingShaderProgram->addShader( GsGraphics::GsShaderProgram::eFragmentShader, fragmentShaderFilename );
+	assert( statusOK );
+	if ( ! statusOK )
+	{
+		// TO DO
+		// - handle error
+	}
+	statusOK = _renderingShaderProgram->link();
+	assert( statusOK );
+	if ( ! statusOK )
+	{
+		// TO DO
+		// - handle error
+	}
 }
 
 /******************************************************************************
@@ -287,11 +330,132 @@ void GsVolumeTree< DataTList, NodeTileRes, BrickRes, BorderSize, TDataStructureK
 {
 	syncDebugVolTree();
 
-	glDisable( GL_LIGHTING );
-	glDisable( GL_BLEND );
-	glPolygonMode( GL_FRONT_AND_BACK , GL_LINE );
-	debugDisplay( 0, make_uint3( NodeTileRes::numElements, 0, 0 ), make_float3( 0.0f ), make_float3( 1.0f ) );
-	glPolygonMode( GL_FRONT_AND_BACK , GL_FILL);
+//	glDisable( GL_LIGHTING );
+//	glDisable( GL_BLEND );
+	//glPolygonMode( GL_FRONT_AND_BACK , GL_LINE );
+
+
+
+	
+	_renderingShaderProgram->use();
+	static bool isVAOInitialized = false;
+	static GLuint vao;
+	if ( ! isVAOInitialized )
+	{
+		glCreateVertexArrays( 1, &vao );
+
+		isVAOInitialized = true;
+	}
+
+	//----------------------------------------------------------------------------------------------------------
+	static bool isUniformUnitialized = false;
+	if ( ! isUniformUnitialized )
+	{
+		_modelMatrixUniformLocation = glGetUniformLocation( _renderingShaderProgram->_program, "uModelMatrix" );
+		assert( _modelMatrixUniformLocation != -1 );
+		if ( _modelMatrixUniformLocation == -1 )
+		{
+			// TO DO
+			// - handle error
+		}
+
+		_colorUniformLocation = glGetUniformLocation( _renderingShaderProgram->_program, "uColor" );
+		assert( _colorUniformLocation != -1 );
+		if ( _colorUniformLocation == -1 )
+		{
+			// TO DO
+			// - handle error
+		}
+	
+		// Update flag
+		isUniformUnitialized = true;
+	}
+	//----------------------------------------------------------------------------------------------------------
+
+	glBindVertexArray( vao );
+	glEnable( GL_PROGRAM_POINT_SIZE );
+
+	debugDisplay( 0/*depth*/, make_uint3( NodeTileRes::numElements, 0, 0 )/*address*/, make_float3( 0.0f )/*pos*/, make_float3( 1.0f )/*size*/ );
+
+	glDisable( GL_PROGRAM_POINT_SIZE );
+	glBindVertexArray( 0 );
+	GsGraphics::GsShaderProgram::unuse();
+
+//	glPolygonMode( GL_FRONT_AND_BACK , GL_FILL);
+}
+
+/******************************************************************************
+ * Debugging helpers
+ ******************************************************************************/
+template< class DataTList, class NodeTileRes, class BrickRes, uint BorderSize, typename TDataStructureKernelType >
+void GsVolumeTree< DataTList, NodeTileRes, BrickRes, BorderSize, TDataStructureKernelType >
+::render( const float4x4& pModelMatrix, const float4x4& pViewMatrix, const float4x4& pProjectionMatrix, const int4& pViewport )
+{
+	syncDebugVolTree();
+
+//	glDisable( GL_LIGHTING );
+//	glDisable( GL_BLEND );
+	//glPolygonMode( GL_FRONT_AND_BACK , GL_LINE );
+
+
+
+	
+	_renderingShaderProgram->use();
+	static bool isVAOInitialized = false;
+	static GLuint vao;
+	if ( ! isVAOInitialized )
+	{
+		glCreateVertexArrays( 1, &vao );
+
+		isVAOInitialized = true;
+	}
+
+	//----------------------------------------------------------------------------------------------------------
+	static bool isUniformUnitialized = false;
+	static GLuint _sceneModelMatrixUniformLocation;
+	static GLuint _sceneViewMatrixUniformLocation;
+	static GLuint _sceneProjectionMatrixUniformLocation;
+	if ( ! isUniformUnitialized )
+	{
+		_modelMatrixUniformLocation = glGetUniformLocation( _renderingShaderProgram->_program, "uModelMatrix" );
+		assert( _modelMatrixUniformLocation != -1 );
+		if ( _modelMatrixUniformLocation == -1 )
+		{
+			// TO DO
+			// - handle error
+		}
+
+		_colorUniformLocation = glGetUniformLocation( _renderingShaderProgram->_program, "uColor" );
+		assert( _colorUniformLocation != -1 );
+		if ( _colorUniformLocation == -1 )
+		{
+			// TO DO
+			// - handle error
+		}
+
+		_sceneModelMatrixUniformLocation = glGetUniformLocation( _renderingShaderProgram->_program, "uSceneModelMatrix" );
+		_sceneViewMatrixUniformLocation = glGetUniformLocation( _renderingShaderProgram->_program, "uSceneViewMatrix" );
+		_sceneProjectionMatrixUniformLocation = glGetUniformLocation( _renderingShaderProgram->_program, "uSceneProjectionMatrix" );
+	
+		// Update flag
+		isUniformUnitialized = true;
+	}
+	//----------------------------------------------------------------------------------------------------------
+
+	glBindVertexArray( vao );
+	glEnable( GL_PROGRAM_POINT_SIZE );
+
+	glUniformMatrix4fv( _sceneModelMatrixUniformLocation, 1/*count*/, GL_FALSE/*GL_TRUE*//*transpose*/, pModelMatrix._array );
+	glUniformMatrix4fv( _sceneViewMatrixUniformLocation, 1/*count*/, GL_FALSE/*GL_TRUE*//*transpose*/, pViewMatrix._array );
+	glUniformMatrix4fv( _sceneProjectionMatrixUniformLocation, 1/*count*/, GL_FALSE/*GL_TRUE*//*transpose*/, pProjectionMatrix._array );
+
+	debugDisplay( 0/*depth*/, make_uint3( NodeTileRes::numElements, 0, 0 )/*address*/, make_float3( 0.0f )/*pos*/, make_float3( 1.0f )/*size*/ );
+
+	glDisable( GL_PROGRAM_POINT_SIZE );
+	glBindVertexArray( 0 );
+	GsGraphics::GsShaderProgram::unuse();
+
+//	glPolygonMode( GL_FRONT_AND_BACK , GL_FILL);
 }
 
 /******************************************************************************
@@ -386,7 +550,8 @@ void GsVolumeTree< DataTList, NodeTileRes, BrickRes, BorderSize, TDataStructureK
 				}
 
 				// DARK GREEN
-				glColor4f( 0.1f, 0.7f, 0.1f, 0.5f );
+				//glColor4f( 0.1f, 0.7f, 0.1f, 0.5f );
+				glUniform4f( _colorUniformLocation, 0.1f, 0.7f, 0.1f, 0.5f );
 	}
 	else
 	{
@@ -397,7 +562,8 @@ void GsVolumeTree< DataTList, NodeTileRes, BrickRes, BorderSize, TDataStructureK
 			{
 				if ( _showNodeHasBrickTerminal )
 				{
-					glColor4f( _nodeHasBrickTerminalColor.x, _nodeHasBrickTerminalColor.y, _nodeHasBrickTerminalColor.z, _nodeHasBrickTerminalColor.w );
+					//glColor4f( _nodeHasBrickTerminalColor.x, _nodeHasBrickTerminalColor.y, _nodeHasBrickTerminalColor.z, _nodeHasBrickTerminalColor.w );
+					glUniform4f( _colorUniformLocation, _nodeHasBrickTerminalColor.x, _nodeHasBrickTerminalColor.y, _nodeHasBrickTerminalColor.z, _nodeHasBrickTerminalColor.w );
 					drawCube( pos, pos + size );
 				}
 			}
@@ -405,7 +571,8 @@ void GsVolumeTree< DataTList, NodeTileRes, BrickRes, BorderSize, TDataStructureK
 			{
 				if ( _showNodeHasBrickNotTerminal )
 				{
-					glColor4f( _nodeHasBrickNotTerminalColor.x, _nodeHasBrickNotTerminalColor.y, _nodeHasBrickNotTerminalColor.z, _nodeHasBrickNotTerminalColor.w );
+					//glColor4f( _nodeHasBrickNotTerminalColor.x, _nodeHasBrickNotTerminalColor.y, _nodeHasBrickNotTerminalColor.z, _nodeHasBrickNotTerminalColor.w );
+					glUniform4f( _colorUniformLocation, _nodeHasBrickNotTerminalColor.x, _nodeHasBrickNotTerminalColor.y, _nodeHasBrickNotTerminalColor.z, _nodeHasBrickNotTerminalColor.w );
 					drawCube( pos, pos + size );
 				}
 			}
@@ -415,7 +582,8 @@ void GsVolumeTree< DataTList, NodeTileRes, BrickRes, BorderSize, TDataStructureK
 		{
 			if ( _showNodeIsBrickNotInCache )
 			{
-				glColor4f( _nodeIsBrickNotInCacheColor.x, _nodeIsBrickNotInCacheColor.y, _nodeIsBrickNotInCacheColor.z, _nodeIsBrickNotInCacheColor.w );
+				//glColor4f( _nodeIsBrickNotInCacheColor.x, _nodeIsBrickNotInCacheColor.y, _nodeIsBrickNotInCacheColor.z, _nodeIsBrickNotInCacheColor.w );
+				glUniform4f( _colorUniformLocation, _nodeIsBrickNotInCacheColor.x, _nodeIsBrickNotInCacheColor.y, _nodeIsBrickNotInCacheColor.z, _nodeIsBrickNotInCacheColor.w );
 				drawCube( pos, pos + size );
 			}
 		}
@@ -424,7 +592,8 @@ void GsVolumeTree< DataTList, NodeTileRes, BrickRes, BorderSize, TDataStructureK
 			// Empty node
 			if ( _showNodeEmptyOrConstant )
 			{
-				glColor4f( _nodeEmptyOrConstantColor.x, _nodeEmptyOrConstantColor.y, _nodeEmptyOrConstantColor.z, _nodeEmptyOrConstantColor.w );
+				//glColor4f( _nodeEmptyOrConstantColor.x, _nodeEmptyOrConstantColor.y, _nodeEmptyOrConstantColor.z, _nodeEmptyOrConstantColor.w );
+				glUniform4f( _colorUniformLocation, _nodeEmptyOrConstantColor.x, _nodeEmptyOrConstantColor.y, _nodeEmptyOrConstantColor.z, _nodeEmptyOrConstantColor.w );
 				drawCube( pos, pos + size );
 			}
 		}
@@ -443,44 +612,76 @@ template< class DataTList, class NodeTileRes, class BrickRes, uint BorderSize, t
 void GsVolumeTree< DataTList, NodeTileRes, BrickRes, BorderSize, TDataStructureKernelType >
 ::drawCube( const float3& p1, const float3& p2 )
 {
-	glBegin(GL_QUADS);
-	// Front Face
-	glVertex3f(p1.x, p1.y, p2.z);	// Bottom Left Of The Texture and Quad
-	glVertex3f(p1.x, p2.y, p2.z);	// Top Left Of The Texture and Quad
-	glVertex3f(p2.x, p2.y, p2.z);	// Top Right Of The Texture and Quad
-	glVertex3f(p2.x, p1.y, p2.z);	// Bottom Right Of The Texture and Quad
+	//glBegin(GL_QUADS);
 
-	// Back Face
-	glVertex3f(p1.x, p1.y, p1.z);	// Bottom Right Of The Texture and Quad
-	glVertex3f(p2.x, p1.y, p1.z);	// Bottom Left Of The Texture and Quad
-	glVertex3f(p2.x, p2.y, p1.z);	// Top Left Of The Texture and Quad
-	glVertex3f(p1.x, p2.y, p1.z);	// Top Right Of The Texture and Quad
+	//// Front Face
+	//glVertex3f(p1.x, p1.y, p2.z);	// Bottom Left Of The Texture and Quad
+	//glVertex3f(p1.x, p2.y, p2.z);	// Top Left Of The Texture and Quad
+	//glVertex3f(p2.x, p2.y, p2.z);	// Top Right Of The Texture and Quad
+	//glVertex3f(p2.x, p1.y, p2.z);	// Bottom Right Of The Texture and Quad
 
-	// Top Face
-	glVertex3f(p1.x, p2.y, p1.z);	// Top Left Of The Texture and Quad
-	glVertex3f(p2.x, p2.y, p1.z);	// Top Right Of The Texture and Quad
-	glVertex3f(p2.x, p2.y, p2.z);	// Bottom Right Of The Texture and Quad
-	glVertex3f(p1.x, p2.y, p2.z);	// Bottom Left Of The Texture and Quad
+	//// Back Face
+	//glVertex3f(p1.x, p1.y, p1.z);	// Bottom Right Of The Texture and Quad
+	//glVertex3f(p2.x, p1.y, p1.z);	// Bottom Left Of The Texture and Quad
+	//glVertex3f(p2.x, p2.y, p1.z);	// Top Left Of The Texture and Quad
+	//glVertex3f(p1.x, p2.y, p1.z);	// Top Right Of The Texture and Quad
 
-	// Bottom Face
-	glVertex3f(p1.x, p1.y, p1.z);	// Top Right Of The Texture and Quad
-	glVertex3f(p1.x, p1.y, p2.z);	// Bottom Right Of The Texture and Quad
-	glVertex3f(p2.x, p1.y, p2.z);	// Bottom Left Of The Texture and Quad
-	glVertex3f(p2.x, p1.y, p1.z);	// Top Left Of The Texture and Quad
+	//// Top Face
+	//glVertex3f(p1.x, p2.y, p1.z);	// Top Left Of The Texture and Quad
+	//glVertex3f(p2.x, p2.y, p1.z);	// Top Right Of The Texture and Quad
+	//glVertex3f(p2.x, p2.y, p2.z);	// Bottom Right Of The Texture and Quad
+	//glVertex3f(p1.x, p2.y, p2.z);	// Bottom Left Of The Texture and Quad
 
-	// Right face
-	glVertex3f(p2.x, p1.y, p1.z);	// Bottom Right Of The Texture and Quad
-	glVertex3f(p2.x, p1.y, p2.z);	// Bottom Left Of The Texture and Quad
-	glVertex3f(p2.x, p2.y, p2.z);	// Top Left Of The Texture and Quad
-	glVertex3f(p2.x, p2.y, p1.z);	// Top Right Of The Texture and Quad
+	//// Bottom Face
+	//glVertex3f(p1.x, p1.y, p1.z);	// Top Right Of The Texture and Quad
+	//glVertex3f(p1.x, p1.y, p2.z);	// Bottom Right Of The Texture and Quad
+	//glVertex3f(p2.x, p1.y, p2.z);	// Bottom Left Of The Texture and Quad
+	//glVertex3f(p2.x, p1.y, p1.z);	// Top Left Of The Texture and Quad
 
-	// Left Face
-	glVertex3f(p1.x, p1.y, p1.z);	// Bottom Left Of The Texture and Quad
-	glVertex3f(p1.x, p2.y, p1.z);	// Top Left Of The Texture and Quad
-	glVertex3f(p1.x, p2.y, p2.z);	// Top Right Of The Texture and Quad
-	glVertex3f(p1.x, p1.y, p2.z);	// Bottom Right Of The Texture and Quad
+	//// Right face
+	//glVertex3f(p2.x, p1.y, p1.z);	// Bottom Right Of The Texture and Quad
+	//glVertex3f(p2.x, p1.y, p2.z);	// Bottom Left Of The Texture and Quad
+	//glVertex3f(p2.x, p2.y, p2.z);	// Top Left Of The Texture and Quad
+	//glVertex3f(p2.x, p2.y, p1.z);	// Top Right Of The Texture and Quad
 
-	glEnd();
+	//// Left Face
+	//glVertex3f(p1.x, p1.y, p1.z);	// Bottom Left Of The Texture and Quad
+	//glVertex3f(p1.x, p2.y, p1.z);	// Top Left Of The Texture and Quad
+	//glVertex3f(p1.x, p2.y, p2.z);	// Top Right Of The Texture and Quad
+	//glVertex3f(p1.x, p1.y, p2.z);	// Bottom Right Of The Texture and Quad
+
+	//glEnd();
+
+	/*static bool isCubeInitialized = false;
+	if ( ! isCubeInitialized )
+	{
+		const std::string vertexShader = "";
+		GLuint GsShaderManager::createShader( const char* pFileName, GLuint pShaderType, GLuint pShaderID )
+
+		isCubeInitialized = true;
+	}*/
+
+	// Draw a cube procedurally
+
+	//----------------------------------------------------------------------------------------------------------
+
+	/*const GLfloat modelMatrix[ 16 ] = {
+		p2.x,  0.f,  0.f, p1.x,
+		 0.f, p2.y,  0.f, p1.y,
+		 0.f,  0.f, p2.z, p1.z,
+		 0.f,  0.f,  0.f, 1.f
+	};*/
+	const GLfloat modelMatrix[ 16 ] = {
+		p2.x - p1.x,  0.f,  0.f, 0.f,
+		 0.f, p2.y - p1.y,  0.f, 0.f,
+		 0.f,  0.f, p2.z - p1.z, 0.f,
+		p1.x, p1.y, p1.z, 1.f
+	};
+	glUniformMatrix4fv( _modelMatrixUniformLocation, 1/*count*/, GL_FALSE/*GL_TRUE*//*transpose*/, modelMatrix );
+	//----------------------------------------------------------------------------------------------------------
+
+	glDrawArrays( GL_LINE_STRIP, 0, 14 );
+	//glDrawArrays( GL_POINTS, 0, 14 );
 }
 
 /******************************************************************************

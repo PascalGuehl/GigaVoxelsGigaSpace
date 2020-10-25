@@ -102,16 +102,16 @@ inline void CUDAPerfMon::frameResized( uint2 frameRes )
 	//-----------------------------------------------------------------------------------------------------
 
 	glGenTextures( 1, &overlayTex );
-	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, overlayTex );
-	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, 0 );
+	glBindTexture( GL_TEXTURE_RECTANGLE, overlayTex );
+	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glBindTexture( GL_TEXTURE_RECTANGLE, 0 );
 
 	glGenTextures( 1, &cacheStateTex );
-	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, cacheStateTex );
-	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-	glTexParameteri( GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-	glBindTexture( GL_TEXTURE_RECTANGLE_EXT, 0 );
+	glBindTexture( GL_TEXTURE_RECTANGLE, cacheStateTex );
+	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glBindTexture( GL_TEXTURE_RECTANGLE, 0 );
 }
 
 /******************************************************************************

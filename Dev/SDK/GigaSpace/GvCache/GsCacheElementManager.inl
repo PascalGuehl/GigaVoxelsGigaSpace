@@ -95,7 +95,7 @@ namespace GvCache
 template< unsigned int TId, typename ElementRes, typename AddressType, typename PageTableArrayType, typename PageTableType >
 GsCacheElementManager< TId, ElementRes, AddressType, PageTableArrayType, PageTableType >
 ::GsCacheElementManager( const uint3& pCachesize, PageTableArrayType* pPageTableArray, uint pGraphicsInteroperability )
-:	GvCore::GsISerializable()
+:	GsCore::GsISerializable()
 ,	_cacheSize( pCachesize )
 ,	_policy( ePreventReplacingUsedElementsPolicy )
 ,	_exceededCapacity( false )

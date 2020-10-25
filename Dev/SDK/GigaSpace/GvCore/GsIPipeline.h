@@ -48,7 +48,7 @@
 
 // GigaVoxels
 #include "GvCore/GsCoreConfig.h"
-#include "GvCore/GsISerializable.h"
+#include <GsSpaceCore/GsISerializable.h>
 
 /******************************************************************************
  ************************* DEFINE AND CONSTANT SECTION ************************
@@ -79,7 +79,7 @@ namespace GvCore
  *
  * This class is the base class for all pipeline objects.
  */
-class GIGASPACE_EXPORT GsIPipeline : public GvCore::GsISerializable
+class GIGASPACE_EXPORT GsIPipeline : public GsCore::GsISerializable
 {
 
 	/**************************************************************************
