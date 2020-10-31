@@ -9,4 +9,4 @@ GigaVoxels and GigaSpace are indeed the same tool.
 http://gigavoxels.inrialpes.fr/
 
 # Version
-Version v1.0.0 is the CUDA 5 or 6 version from july 2015.
+This is the version v1.0.0 from july 2015 which used the CUDA 5 (or 6) toolkit.
