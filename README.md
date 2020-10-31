@@ -6,4 +6,8 @@ GigaSpace is a full-customizable out-of-core, on demand production, and smart ca
 GigaVoxels and GigaSpace are indeed the same tool.
 
 # Website
-http://gigavoxels.inrialpes.fr/
+Dedicated website: http://gigavoxels.inrialpes.fr/
+
+# Gallery
+Some images to illustrate GigaVoxels/GigaSpace.
+![semiproctex](Images/gv_screenshot_01.png)
