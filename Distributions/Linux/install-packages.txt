@@ -1,0 +1,14 @@
+[UBUNTU]
+You need a working cuda installation before running GigaVoxels, you can install it by running:
+	apt-get install nvidia-[driver-version] nvidia-modprobe
+On trusty (Ubuntu-14.04), the newest driver is nvidia-331-updates
+You need to reboot to load the new drivers.
+
+Run:
+	dpkg -i [package-name] 	=> you should get error messages about missing dependencies
+	apt-get install -f 		=> it will install the missing dependencies.
+
+If you installed the demo package, demo are in /usr/local/gigaspace/bin
+
+[DEBIAN]
+	TODO

@@ -1,0 +1,6 @@
+usr/lib/*
+usr/lib/libGigaSpace.so
+usr/lib/libGsCompute.so
+usr/lib/libGsGraphics.so
+usr/lib/cudpp.so.2
+usr/lib/cudpp.so.2.1

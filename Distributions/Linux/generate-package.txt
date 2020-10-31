@@ -1,0 +1,22 @@
+[UBUNTU]:
+Install debhelper, ubuntu-dev-tools and subversion
+generate a gpg-key (gpg --gen-key) to sign the package (you can use default values)
+Modify the parameters of makeSourcePackage.sh (svn username, svn url, gpg-key, list of distributions, ...)
+Run makeSourcePackage.sh
+
+Generate a pristine development system thanks to pbuilder-dist:
+	pbuilder-dist [distrib] [arch] create (where distrib and arch are the distribution name and architecture for which you want to build the package). 
+
+Build the package:
+	pbuilder-dist [distrib] build gigaspace-[version]~[distrib].dsc
+
+The resulting packages are in ~/pbuilder/[distrib]_result/
+
+[DEBIAN]:
+	TODO
+
+
+
+
+
+

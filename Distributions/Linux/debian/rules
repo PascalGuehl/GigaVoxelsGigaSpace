@@ -1,0 +1,92 @@
+#!/usr/bin/make -f
+
+APPNAME := libgigaspace
+#builddir:
+#	mkdir -p builddir
+
+builddir/Makefile:
+	chmod +x Install/Linux/install.sh
+	./Install/Linux/install.sh
+
+build: build-stamp
+
+build-stamp: builddir/Makefile
+	dh_testdir
+	# Add here commands to compile the package.
+	chmod +x Install/Linux/build.sh
+	./Install/Linux/build.sh
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+	# Add here commands to clean up after the build process.
+	#rm -rf Release Generated_Linux
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+	# libgigaspace
+	install -D -m 755 Release/Lib/libGigaSpace.so	$(CURDIR)/debian/libgigaspace/usr/lib/libGigaSpace.so
+	install -D -m 755 Release/Lib/libGsCompute.so	$(CURDIR)/debian/libgigaspace/usr/lib/libGsCompute.so
+	install -D -m 755 Release/Lib/libGsGraphics.so	$(CURDIR)/debian/libgigaspace/usr/lib/libGsGraphics.so
+	install -D -m 755 External/CommonLibraries/cudpp-2.1/build/lib/libcudpp.so $(CURDIR)/debian/libgigaspace/usr/lib/libcudpp.so.2.1
+	ln -s libcudpp.so.2.1 $(CURDIR)/debian/libgigaspace/usr/lib/libcudpp.so.2
+	# gigaspace-dev
+	mkdir -p $(CURDIR)/debian/gigaspace-dev/usr/include/
+	cp -r Release/Inc/* $(CURDIR)/debian/gigaspace-dev/usr/include/
+	chmod -R 644 $(CURDIR)/debian/gigaspace-dev/usr/include/
+	# gigaspace-demo
+		# Demos
+	install -d $(CURDIR)/debian/gigaspace-demo/usr/local/gigaspace/bin/
+	install -D -m 755 Release/Bin/*Demo	$(CURDIR)/debian/gigaspace-demo/usr/local/gigaspace/bin/
+		# Viewer plugins
+	install -d $(CURDIR)/debian/gigaspace-demo/usr/local/gigaspace/viewer-plugins/
+	install -D -m 755 Release/Bin/*.gvp	$(CURDIR)/debian/gigaspace-demo/usr/local/gigaspace/viewer-plugins/
+		# Viewer
+	install -D -m 755 Release/Tools/GigaVoxelsViewer/Bin/GvViewer $(CURDIR)/debian/gigaspace-demo/usr/local/gigaspace/bin/
+	install -d $(CURDIR)/debian/gigaspace-demo/usr/lib/
+	install -D -m 755 Release/Tools/GigaVoxelsViewer/Bin/*.so $(CURDIR)/debian/gigaspace-demo/usr/lib/
+		# Data
+	cp -r Release/Bin/Data/ $(CURDIR)/debian/gigaspace-demo/usr/local/gigaspace/data/
+	chmod 755 -R $(CURDIR)/debian/gigaspace-demo/usr/local/gigaspace/data/
+		# Settings
+	install -d $(CURDIR)/debian/gigaspace-demo/usr/local/gigaspace/bin/Settings
+	cp Data/Settings/GigaSpace.xml $(CURDIR)/debian/gigaspace-demo/usr/local/gigaspace/bin/Settings/
+	chmod 644 $(CURDIR)/debian/gigaspace-demo/usr/local/gigaspace/bin/Settings/GigaSpace.xml
+		# Resources
+	cp -r Release/Bin/Resources $(CURDIR)/debian/gigaspace-demo/usr/local/gigaspace/bin/Resources/
+	chmod 644 -R $(CURDIR)/debian/gigaspace-demo/usr/local/gigaspace/bin/Resources/
+
+
+# Add here commands to install the package into debian/your_appname
+#    cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installdocs
+	dh_installexamples
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_makeshlibs
+	#LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(CURDIR)/debian/libylm/usr/lib/ dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure
+

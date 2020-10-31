@@ -1,0 +1,26 @@
+Source: gigaspace
+Section: devel
+Priority: standard
+Maintainer: Pascal Guehl <pascal.guehl@inria.fr>
+Build-Depends: debhelper (>= 9), qt4-dev-tools, libqt4-dev, libqt4-opengl-dev, libqglviewer-dev, freeglut3-dev, libmagick++-dev, libtinyxml-dev, libqwt-dev, cimg-dev, libassimp-dev, libglm-dev, unzip, cmake, nvidia-cuda-toolkit (>= 5), libdcmtk2-dev
+Standards-Version: 3.9.3
+Homepage: http://artis.imag.fr/Membres/~Pascal.Guehl/
+
+Package: libgigaspace
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: GigaSpace Runtime library.
+ This package provides the runtime libraries for programmes using GigaSpace.
+
+Package: gigaspace-dev
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgigaspace 
+Description: Development header files for GigaVoxels
+ This package provides development header files and library for
+ the libgigaspace package.
+
+Package: gigaspace-demo
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgigaspace, freeglut3, libqglviewer2, libcudart5.5, libqwt6, libassimp3, libtinyxml2.6.2
+Description: Demo for gigaspace.
+ This package provides compiled examples for the gigaspace library.

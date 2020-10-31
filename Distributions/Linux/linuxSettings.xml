@@ -1,0 +1,4 @@
+<Settings>
+	<Data path="/usr/local/gigaspace/data" />
+	<UserProfile path="~/.gigaspace" />
+</Settings>

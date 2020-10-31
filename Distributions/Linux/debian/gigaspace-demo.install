@@ -1,0 +1,5 @@
+/usr/lib/*
+/usr/local/gigaspace/
+/usr/local/gigaspace/bin/*
+/usr/local/gigaspace/Settings/*
+/usr/local/gigaspace/viewer-plugins/*
